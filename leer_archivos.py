@@ -40,13 +40,15 @@ import os
 
 # Lista con los nombres de las columnas a buscar
 columnas_buscar = ["nombre_columna1", "nombre_columna2", "nombre_columna3"]
-columnas = ['lectura_correctas', 'comprension_correctas', 'oral_correctas', 'comparacion_correctas', 
-            'numero_faltante_correctas', 'sumas_correctas', 'restas_correctas' ]
+# columnas = ['lectura_correctas', 'comprension_correctas', 'oral_correctas', 'comparacion_correctas', 
+#             'numero_faltante_correctas', 'sumas_correctas', 'restas_correctas' ]
+columnas =['programa','año', 'Departamento', 'Municipio', 'Colegio', 'Sede', 'tratamiento/control', 'focalizado', 
+           'Género', 'Grado', 'Grupo', 'Jornada', 'ID']
 
 archivos_en_carpeta = os.listdir('Base')
 
 # Abrir archivo de texto para guardar los nombres de las columnas que no se encuentren
-with open("columnas_faltantes.txt", "w") as archivo_txt:
+with open("columnas_faltantes3.txt", "w") as archivo_txt:
     
     archivos_excel = [archivo for archivo in archivos_en_carpeta if archivo.endswith(".xlsx")]
     # print(archivos_excel)
@@ -54,7 +56,7 @@ with open("columnas_faltantes.txt", "w") as archivo_txt:
     for nombre_archivo in archivos_excel:
         
         # Leer archivo excel con pandas
-        df = pd.read_excel(os.path.join('Base', nombre_archivo), sheet_name='4°')
+        df = pd.read_excel(os.path.join('Base', nombre_archivo), sheet_name='3°')
         print(nombre_archivo) 
         # Verificar si las columnas buscadas existen en el archivo
         columnas_existentes = df.columns.tolist()
