@@ -67,15 +67,21 @@ import os
 #             mensaje = f"Archivo {nombre_archivo}: faltan columnas {columnas_faltantes}\n"
 #             archivo_txt.write(mensaje)
 
+for numero_hoja in range(2,5,1):
+    nombre_hoja = str(numero_hoja) + '°'
+    print(nombre_hoja)
+    df1 = pd.read_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Entrada_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID_cruce'])
+    print(df1)
+    df2 = pd.read_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Salida_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID estudiante'])
+    print(df2)
+    df2= df2.rename(columns={'ID estudiante':'ID_cruce'})
 
-df1 = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Entrada_2022.xlsx', sheet_name='2°', usecols=['ID_cruce'])
-df2 = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Salida_2022.xlsx', sheet_name='2°', usecols=['ID estudiante'])
-df2= df2.rename(columns={'ID estudiante':'ID_cruce'})
-comparacion = df1['ID_cruce'] == df2['ID estudiante']
+valores_comunes = df1['ID_cruce'].isin(df2['ID_cruce'])
+df1['esta_en_comun'] = valores_comunes
 
-if df1['ID_cruce'].equals(df2['ID estudiante']):
-    print("Las columnas son iguales")
-else:
-    print("Las columnas son diferentes")
-# resultado = comparacion.value_counts()
-# print(resultado)
+with pd.ExcelWriter('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/Comunes.xlsx') as writer:
+    df1.to_excel(writer, sheet_name='2', index=False)
+    df1.to_excel(writer, sheet_name='3', index=False)
+
+# df1.to_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/Comunes.xlsx', index=False)
+
