@@ -67,21 +67,54 @@ import os
 #             mensaje = f"Archivo {nombre_archivo}: faltan columnas {columnas_faltantes}\n"
 #             archivo_txt.write(mensaje)
 
-for numero_hoja in range(2,5,1):
-    nombre_hoja = str(numero_hoja) + '°'
-    print(nombre_hoja)
-    df1 = pd.read_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Entrada_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID_cruce'])
-    print(df1)
-    df2 = pd.read_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Salida_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID estudiante'])
-    print(df2)
-    df2= df2.rename(columns={'ID estudiante':'ID_cruce'})
 
-valores_comunes = df1['ID_cruce'].isin(df2['ID_cruce'])
-df1['esta_en_comun'] = valores_comunes
 
-with pd.ExcelWriter('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/Comunes.xlsx') as writer:
-    df1.to_excel(writer, sheet_name='2', index=False)
-    df1.to_excel(writer, sheet_name='3', index=False)
+
+
+# for numero_hoja in range(2,5,1):
+#     nombre_hoja = str(numero_hoja) + '°'
+#     df1 = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Entrada_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID_cruce'])
+#     df2 = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada//BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Salida_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID estudiante'])
+#     df2= df2.rename(columns={'ID estudiante':'ID_cruce'})
+
+# valores_comunes = df1['ID_cruce'].isin(df2['ID_cruce'])
+# df1['esta_en_comun'] = valores_comunes
+
+# with pd.ExcelWriter('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/Comunes.xlsx') as writer:
+#     df1.to_excel(writer, sheet_name='2', index=False)
+#     df1.to_excel(writer, sheet_name='3', index=False)
+
+
+
 
 # df1.to_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/Comunes.xlsx', index=False)
 
+
+
+# Cargar los dataframes de entrada
+dfs_entrada = {}
+for numero_hoja in range(2, 6):
+    nombre_hoja = str(numero_hoja) + '°'
+    dfs_entrada[nombre_hoja] = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_MJ/BBDD_AG_RP_Entrada_2022.xlsx', sheet_name=nombre_hoja, usecols=['Código estudiante'])
+
+# Cargar los dataframes de salida y separarlos en hojas
+dfs_salida = {}
+for numero_hoja in range(2, 6):
+    nombre_hoja = str(numero_hoja) + '°'
+    df_salida = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_MJ/BBDD_AG_RP_Salida_2022.xlsx', sheet_name=nombre_hoja, usecols=['Código estudiante'])
+    # df_salida = df_salida.rename(columns={'CodigoAG': 'CodigoAulaGlobal'})
+    dfs_salida[nombre_hoja] = df_salida
+
+# Realizar la validación para cada hoja y guardar los resultados en un diccionario
+resultados = {}
+for nombre_hoja in dfs_entrada:
+    df_entrada = dfs_entrada[nombre_hoja]
+    df_salida = dfs_salida[nombre_hoja]
+    valores_comunes = df_entrada['Código estudiante'].isin(df_salida['Código estudiante'])
+    df_entrada['esta_en_comun'] = valores_comunes
+    resultados[nombre_hoja] = df_entrada
+
+# Guardar los resultados en un archivo de Excel con hojas separadas
+with pd.ExcelWriter('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_RP__2022_Comparativo.xlsx') as writer:
+    for nombre_hoja, df_resultado in resultados.items():
+        df_resultado.to_excel(writer, sheet_name=nombre_hoja, index=False)
