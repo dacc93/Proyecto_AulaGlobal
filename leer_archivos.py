@@ -95,13 +95,13 @@ import os
 dfs_entrada = {}
 for numero_hoja in range(2, 6):
     nombre_hoja = str(numero_hoja) + '°'
-    dfs_entrada[nombre_hoja] = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_RP/BBDD_AG_RP_Entrada_2020.xlsx', sheet_name=nombre_hoja, usecols=['ID'])
+    dfs_entrada[nombre_hoja] = pd.read_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_2022\BBDD_AG_JARPMJ_Entrada_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID_global'])
 
 # Cargar los dataframes de salida y separarlos en hojas
 dfs_salida = {}
 for numero_hoja in range(2, 6):
     nombre_hoja = str(numero_hoja) + '°'
-    df_salida = pd.read_excel('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_RP/BBDD_AG_RP_Salida_2020.xlsx', sheet_name=nombre_hoja, usecols=['ID'])
+    df_salida = pd.read_excel('C:/Users/Admin/OneDrive - BAMBOO ANALYTICS SAS/Documentos/Prueba_GIT_AG/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_2022/BBDD_AG_JARPMJ_Salida_2022.xlsx', sheet_name=nombre_hoja, usecols=['ID_global'])
     # df_salida = df_salida.rename(columns={'CodigoAG': 'CodigoAulaGlobal'})
     dfs_salida[nombre_hoja] = df_salida
 
@@ -110,11 +110,11 @@ resultados = {}
 for nombre_hoja in dfs_entrada:
     df_entrada = dfs_entrada[nombre_hoja]
     df_salida = dfs_salida[nombre_hoja]
-    valores_comunes = df_entrada['ID'].isin(df_salida['ID'])
+    valores_comunes = df_entrada['ID_global'].isin(df_salida['ID_global'])
     df_entrada['esta_en_comun'] = valores_comunes
     resultados[nombre_hoja] = df_entrada
 
 # Guardar los resultados en un archivo de Excel con hojas separadas
-with pd.ExcelWriter('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_RP_2020_Comparativo.xlsx') as writer:
+with pd.ExcelWriter('C:/Users/franc/OneDrive - Universidad Icesi (@icesi.edu.co)/Escritorio/Prueba trabajo/Trabajo_AulaGlobal/Proyecto_AulaGlobal/Base_organizada/BBDD_AG_JARPMJ_Salida_2022_Comparativo.xlsx') as writer:
     for nombre_hoja, df_resultado in resultados.items():
         df_resultado.to_excel(writer, sheet_name=nombre_hoja, index=False)
